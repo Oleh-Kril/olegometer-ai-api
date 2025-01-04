@@ -9,8 +9,11 @@ def bbox_diff(bbox1, bbox2, threshold=MAX_OK_DIFFERENCE):
     width_diff = absolute_width_diff / width1
     height_diff = absolute_height_diff / height1
 
+    width_diff_sign = "+" if width2 > width1 else "-"
+    height_diff_sign = "+" if height2 > height1 else "-"
+
     if width_diff > threshold or height_diff > threshold:
-        return absolute_width_diff, absolute_height_diff, width_diff, height_diff
+        return absolute_width_diff, absolute_height_diff, width_diff, height_diff, width_diff_sign, height_diff_sign
     return None
 
 def analyze_pairs(ui_elements_pairs):
@@ -31,10 +34,12 @@ def analyze_pairs(ui_elements_pairs):
             insights[bbox2_key].append({
                 "message": f'Bounding box differs from design by more than {int(MAX_OK_DIFFERENCE*100)}%',
                 "type": "size",
+                "width_diff_sign": diff[4],
+                "height_diff_sign": diff[5],
                 "absoluteDiffWidth": diff[0],
                 "absoluteDiffHeight": diff[1],
-                "diffWidthInPercents": round(diff[2] * 100, 2),
-                "diffHeightInPercents": round(diff[3] * 100, 2),
+                "diffWidthInPercents": round(diff[2] * 100, 1),
+                "diffHeightInPercents": round(diff[3] * 100, 1),
             })
 
     for pair in pairs_missing_on_2:
