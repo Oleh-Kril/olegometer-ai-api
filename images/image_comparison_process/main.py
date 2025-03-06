@@ -11,10 +11,10 @@ def process_images(image1, image2):
     start_time = time.time()
 
     image_1_np = skimage.io.imread(BytesIO(image1))
-    ui_elements_1 = split_image_to_ui_elements(image_1_np) # show_groups(image_1, labeled_image_1)
+    ui_elements_1 = split_image_to_ui_elements(image_1_np, "design")
 
     image_2_np = skimage.io.imread(BytesIO(image2))
-    ui_elements_2 = split_image_to_ui_elements(image_2_np)
+    ui_elements_2 = split_image_to_ui_elements(image_2_np, "website")
 
     segmentation_time = time.time() - start_time
 
