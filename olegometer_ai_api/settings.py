@@ -30,6 +30,9 @@ ALLOWED_HOSTS = []
 
 # ENVIRONMENT VARIABLES
 import os
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY')
@@ -45,7 +48,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'images',
+    'drf_yasg',
 ]
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic'
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

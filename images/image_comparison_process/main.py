@@ -41,7 +41,7 @@ def process_images(image1, image2):
         "pairsMissing": pairs_missing,
         "insights": insights,
         "segmentationTime": segmentation_time,
-        "findingPairtsTime": finding_pairs_time,
+        "findingPairsTime": finding_pairs_time,
         "analysisTime": analysis_time,
         "totalTime": segmentation_time + finding_pairs_time + analysis_time,
     }
