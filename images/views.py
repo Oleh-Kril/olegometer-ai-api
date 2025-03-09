@@ -1,3 +1,5 @@
+import traceback
+
 import boto3
 from django.conf import settings
 from drf_yasg import openapi
@@ -37,6 +39,8 @@ class ImageURLView(APIView):
             )
 
             try:
+                print("Starting fetching: ", key1, key2)
+
                 response1 = s3_client.get_object(Bucket='olegometer.storage', Key=key1)
                 response2 = s3_client.get_object(Bucket='olegometer.storage', Key=key2)
 
@@ -48,5 +52,6 @@ class ImageURLView(APIView):
                 # Return a successful response
                 return Response(response, status=status.HTTP_200_OK)
             except Exception as e:
+                traceback.print_exc()
                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

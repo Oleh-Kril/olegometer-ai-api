@@ -30,6 +30,10 @@ def edge_segmentation(image):
     # plt.title('image without alpha channel')
     # plt.show()
 
+    # Check if it has an alpha channel
+    if image.shape[-1] == 4:
+        image = image[..., :3]
+
     image_wh = rgb2gray(image)
 
     edges = canny(image_wh, sigma=EDGE_DETECTION_SIGMA)
@@ -58,7 +62,7 @@ def edge_segmentation(image):
 def save_groups_in_file(image, labeled_image, image_id):
     # Create a color map for visualization
     num_labels = np.max(labeled_image)
-    print(num_labels)
+    print("Number of labels for " + image_id + " is", num_labels)
     colors = plt.cm.jet(np.linspace(0, 1, num_labels + 1))
 
     # Visualize the labeled regions in different colors
@@ -68,7 +72,7 @@ def save_groups_in_file(image, labeled_image, image_id):
     for region in regionprops(labeled_image):
         # Draw rectangle around segmented region
         minr, minc, maxr, maxc = region.bbox
-        print(region.bbox)
+        # print(region.bbox)
         rect = plt.Rectangle((minc, minr), maxc - minc, maxr - minr,
                              fill=False, edgecolor=colors[region.label], linewidth=2)
         ax.add_patch(rect)
