@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('Agg') #Agg - hidden, TkAgg - can show
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage.feature import canny
@@ -8,15 +8,16 @@ import scipy.ndimage as nd
 from skimage.measure import regionprops, label
 from skimage.morphology import disk
 plt.rcParams["figure.figsize"] = (12, 8)
+# import skimage.io as io
 
 EDGE_DETECTION_SIGMA = 2.0
-DILATION_DISK_SIZE = 4
-STANDART_WIDTH = 1600
+DILATION_DISK_SIZE = 8
+STANDARD_WIDTH = 1200
 LABEL_CONNECTIVITY = 2
 
 def split_image_to_ui_elements(image, image_id):
     labeled_image, image, edges = edge_segmentation(image)
-    save_groups_in_file(image, labeled_image, image_id)
+    # save_groups_in_file(image, labeled_image, image_id)
     regions = regionprops(labeled_image)
     ui_elements = []
     for i, region in enumerate(regions):
@@ -26,13 +27,12 @@ def split_image_to_ui_elements(image, image_id):
     return ui_elements
 
 def edge_segmentation(image):
+    if image.shape[-1] == 4:
+        image = image[..., :3]
+
     # plt.imshow(image)
     # plt.title('image without alpha channel')
     # plt.show()
-
-    # Check if it has an alpha channel
-    if image.shape[-1] == 4:
-        image = image[..., :3]
 
     image_wh = rgb2gray(image)
 
@@ -89,11 +89,13 @@ def calculate_background_value(image_gray):
 
     return background_value
 
-def get_dilation_disk_size(image, default_disk_size=DILATION_DISK_SIZE, reference_width=STANDART_WIDTH):
+def get_dilation_disk_size(image, default_disk_size=DILATION_DISK_SIZE, reference_width=STANDARD_WIDTH):
     image_width = image.shape[1]
     adjusted_disk_size = int(default_disk_size * (image_width / reference_width))
     return adjusted_disk_size
 
 if __name__ == '__main__':
-    labeled_image, image, edges = edge_segmentation("amazon.png")
-    save_groups_in_file(image, labeled_image)
+    pass
+    # image = io.imread("./demo a.png")
+    # labeled_image, image, edges = edge_segmentation(image)
+    # save_groups_in_file(image, labeled_image, "1")

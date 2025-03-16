@@ -1,4 +1,4 @@
-MAX_OK_DIFFERENCE = 0.1
+MAX_OK_DIFFERENCE = 0.2
 
 def bbox_diff(bbox1, bbox2, threshold=MAX_OK_DIFFERENCE):
     width1, height1 = bbox1[2] - bbox1[0], bbox1[3] - bbox1[1]
@@ -29,17 +29,26 @@ def analyze_pairs(ui_elements_pairs):
         diff = bbox_diff(bbox1, bbox2)
         if diff is not None:
             bbox2_key = f"{bbox2}-website"
+
             if bbox2_key not in insights:
                 insights[bbox2_key] = []
+
+            width_percent = round(diff[2] * 100, 1)
+            height_percent = round(diff[3] * 100, 1)
+
+            width_adj = "wider" if diff[4] == '+' else "slimmer"
+            height_adj = "higher" if diff[5] == '+' else "lower"
+
+            message = f"Element is {width_percent}% {width_adj} and {height_percent}% {height_adj}"
             insights[bbox2_key].append({
-                "message": f'Bounding box differs from design by more than {int(MAX_OK_DIFFERENCE*100)}%',
+                "message": message,
                 "type": "size",
                 "width_diff_sign": diff[4],
                 "height_diff_sign": diff[5],
                 "absoluteDiffWidth": diff[0],
                 "absoluteDiffHeight": diff[1],
-                "diffWidthInPercents": round(diff[2] * 100, 1),
-                "diffHeightInPercents": round(diff[3] * 100, 1),
+                "diffWidthInPercents": width_percent,
+                "diffHeightInPercents": height_percent,
             })
 
     for pair in pairs_missing_on_2:
@@ -48,7 +57,7 @@ def analyze_pairs(ui_elements_pairs):
         if bbox1_key not in insights:
             insights[bbox1_key] = []
         insights[bbox1_key].append({
-            "message": 'Element is missing in the implementation',
+            "message": 'Element is missing in the website',
             "type": "missing"
         })
 
@@ -58,7 +67,7 @@ def analyze_pairs(ui_elements_pairs):
         if bbox2_key not in insights:
             insights[bbox2_key] = []
         insights[bbox2_key].append({
-            "message": 'Element is missing in the design mockups',
+            "message": 'Element is missing in the design',
             "type": "missing"
         })
 
